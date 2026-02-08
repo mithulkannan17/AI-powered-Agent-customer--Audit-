@@ -14,3 +14,11 @@ async def close_mongo_connection():
 
 def get_database():
     return db.client[settings.DATABASE_NAME]
+
+async def init_db():
+    if db.client is None:
+        await connect_to_mongo()
+
+async def close_db():
+    if db.client:
+        db.client.close()
