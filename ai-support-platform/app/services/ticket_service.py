@@ -1,4 +1,5 @@
 from datetime import datetime
+from bson import ObjectId
 from app.core.database import get_database
 from app.models.ticket import Ticket
 
@@ -46,4 +47,28 @@ class TicketService:
         await db.tickets.update_one(
             {"_id": ticket_id},
             {"$set": update}
+        )
+
+    @staticmethod
+    async def escalate_ticket(ticket_id: str, reason: str):
+        db = get_database()
+
+        await db.tickets.update_one(
+        {"_id": ObjectId(ticket_id)},
+        {"$set": {
+            "status": "escalated",
+            "updated_at": datetime.utcnow(),
+            "closed_reason": reason
+        }}
+    )
+
+    @staticmethod
+    async def add_risk_flag(ticket_id: str, flag: str):
+        db = get_database()
+
+        await db.tickets.update_one(
+            {"_id": ObjectId(ticket_id)},
+            {"$addToSet": {
+                "risk_flags": flag 
+            }}
         )

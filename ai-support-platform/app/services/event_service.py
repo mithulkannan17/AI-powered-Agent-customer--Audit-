@@ -1,5 +1,6 @@
 from app.core.database import get_database
 from app.models.event import Event
+from app.services.event_dispatcher import EventDispatcher
 
 class EventService:
 
@@ -14,3 +15,5 @@ class EventService:
         )
 
         await db.events.insert_one(data)
+
+        await EventDispatcher.handle_event(event)

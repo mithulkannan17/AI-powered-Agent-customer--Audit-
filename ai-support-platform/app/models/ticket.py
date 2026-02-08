@@ -2,6 +2,7 @@ from pydantic import BaseModel, Field
 from typing import Optional, List
 from datetime import datetime
 
+
 class Ticket(BaseModel):
     id: Optional[str] = Field(None, alias="_id")
 
@@ -28,3 +29,9 @@ class Ticket(BaseModel):
 
     # Risk flags (populated by AI later)
     risk_flags: List[str] = []
+
+    # IRR
+    irr_label: Optional[int] = None             # 1 = resolved, 0 = unresolved
+    irr_confidence: Optional[float] = None      # model / rule confidence
+    outcome_determined_at: Optional[datetime] = None
+

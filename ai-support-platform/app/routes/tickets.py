@@ -3,6 +3,7 @@ from typing import List
 from app.models.ticket import Ticket
 from app.services.ticket_service import TicketService
 from app.core.database import get_database
+from app.services.outcome_service import OutcomeService
 
 router = APIRouter()
 
@@ -23,3 +24,8 @@ async def list_tickets():
 async def update_ticket_status(ticket_id: str, status: str, reason: str | None = None):
     await TicketService.update_status(ticket_id, status, reason)
     return {"message": "Ticket status updated"}
+
+@router.post("/{ticket_id}/evaluate-out")
+async def evaluate_outcome(ticket_id: str):
+    await OutcomeService.evaluate_ticket_outcome(ticket_id)
+    return {"message": "Outcome evaluated"}
