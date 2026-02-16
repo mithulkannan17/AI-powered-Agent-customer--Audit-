@@ -4,6 +4,7 @@ from app.models.conversation import Conversation
 from app.models.message import Message
 from app.services.signal_extractor import SignalExtractor
 from app.services.event_service import EventService
+from app.services.intervention_service import InterventionService
 
 class ConversationService:
 
@@ -52,5 +53,7 @@ class ConversationService:
         events = SignalExtractor.extract_events(message)
         for event in events:
             await EventService.log_event(event)
+
+        await InterventionService.evaluate(message.ticket_id)
             
         return message

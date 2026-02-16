@@ -1,5 +1,7 @@
 import os
 import joblib
+from bson import ObjectId
+from app.core.database import get_database
 from fastapi import HTTPException
 from app.services.feature_service import FeatureService
 
@@ -25,6 +27,19 @@ class IRRPredictor:
 
     @staticmethod
     async def predict(ticket_id: str):
+        db = get_database()
+
+        ticket = await db.tickets.find_one({"_id": ObjectId(ticket_id)})
+
+        if not ticket:
+            return {"error": "Ticket not found"}
+        
+        if ticket.get("irr_label") is not None:
+            return {
+                "message": "Ticket already labeled",
+                "irr_label": ticket["irr_label"]
+            }
+
         model = get_model()
 
         features = await FeatureService.extract_features(ticket_id)

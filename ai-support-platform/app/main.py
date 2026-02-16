@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from app.core.database import connect_to_mongo, close_mongo_connection
-from app.routes import health, products, orders, tickets, conversations
+from app.routes import health, products, orders, tickets, conversations, admin
 
 app = FastAPI(title="AI Support Platform")
 
@@ -17,4 +17,5 @@ app.include_router(products.router, prefix="/products")
 app.include_router(orders.router, prefix="/orders")
 app.include_router(tickets.router, prefix="/tickets")
 app.include_router(conversations.router, prefix="/conversations")
+app.include_router(admin.router)
 
